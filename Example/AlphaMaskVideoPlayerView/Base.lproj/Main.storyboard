@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -22,17 +23,17 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hvf-6k-4Ka" customClass="AlphaMaskVideoPlayerView" customModule="AlphaMaskVideoPlayerView">
-                                <rect key="frame" x="7.5" y="200" width="360" height="267"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <rect key="frame" x="20" y="250" width="335" height="167"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="360" id="EdV-WS-6yn"/>
-                                    <constraint firstAttribute="height" constant="267" id="t1K-nQ-OLm"/>
+                                    <constraint firstAttribute="width" secondItem="hvf-6k-4Ka" secondAttribute="height" multiplier="2:1" constant="1" id="ibD-lA-dE4"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="0.69571172309999996" green="0.68783415010000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstItem="hvf-6k-4Ka" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="Jh3-QT-ucc"/>
+                            <constraint firstAttribute="trailing" secondItem="hvf-6k-4Ka" secondAttribute="trailing" constant="20" id="e24-Qz-6pf"/>
+                            <constraint firstItem="hvf-6k-4Ka" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" id="ipy-hr-bFY"/>
                             <constraint firstItem="hvf-6k-4Ka" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="nyh-9t-dVe"/>
                         </constraints>
                     </view>

@@ -158,7 +158,7 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = 582LEGWZJK;
+						DevelopmentTeam = FBQ6Z8AF3U;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Manual;
 					};
@@ -388,15 +388,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = 582LEGWZJK;
+				DEVELOPMENT_TEAM = FBQ6Z8AF3U;
 				INFOPLIST_FILE = AlphaMaskVideoPlayerView/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "db86ccc6-7e73-4584-bf20-23e6eac4ee7a";
-				PROVISIONING_PROFILE_SPECIFIER = "ent-*";
+				PROVISIONING_PROFILE = "c436f97c-94c1-455d-a437-aa6ac87d1049";
+				PROVISIONING_PROFILE_SPECIFIER = "noppelabs-*";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 			};

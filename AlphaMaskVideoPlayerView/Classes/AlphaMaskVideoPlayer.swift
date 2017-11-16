@@ -63,7 +63,7 @@ open class AlphaMaskVideoPlayer {
     startReading()
     queue.async { [weak self] in
       guard let _self = self else { return }
-      while _self.mainAssetReader.status != AVAssetReaderStatus.completed {
+      while _self.mainAssetReader.status != .completed {
         autoreleasepool(invoking: { [weak self] in
           guard let (main, alpha) = self?.push() else { return }
           guard let mainCI = self?.image(from: main) else { return }
@@ -102,7 +102,11 @@ open class AlphaMaskVideoPlayer {
   }
   
   private func push() -> (CMSampleBuffer?, CMSampleBuffer?) {
+    guard mainAssetReader.error == nil else { return (nil, nil) }
+    guard mainAssetReader.status == .reading else { return (nil, nil) }
     let main = mainOutput.copyNextSampleBuffer()
+    guard alphaAssetReader.error == nil else { return (nil, nil) }
+    guard alphaAssetReader.status == .reading else { return (nil, nil) }
     let alpha = alphaOutput.copyNextSampleBuffer()
     return (main, alpha)
   }
