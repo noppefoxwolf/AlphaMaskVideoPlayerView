@@ -1,6 +1,5 @@
 # AlphaMaskVideoPlayerView
 
-[![CI Status](http://img.shields.io/travis/🦊Tomoya Hirano/AlphaMaskVideoPlayerView.svg?style=flat)](https://travis-ci.org/🦊Tomoya Hirano/AlphaMaskVideoPlayerView)
 [![Version](https://img.shields.io/cocoapods/v/AlphaMaskVideoPlayerView.svg?style=flat)](http://cocoapods.org/pods/AlphaMaskVideoPlayerView)
 [![License](https://img.shields.io/cocoapods/l/AlphaMaskVideoPlayerView.svg?style=flat)](http://cocoapods.org/pods/AlphaMaskVideoPlayerView)
 [![Platform](https://img.shields.io/cocoapods/p/AlphaMaskVideoPlayerView.svg?style=flat)](http://cocoapods.org/pods/AlphaMaskVideoPlayerView)
