@@ -22,8 +22,12 @@ pod 'AlphaMaskVideoPlayerView'
 
 ## Author
 
-🦊Tomoya Hirano, tomoya.hirano@dena.jp
+🦊Tomoya Hirano, noppelabs@gmail.com
 
 ## License
 
 AlphaMaskVideoPlayerView is available under the MIT license. See the LICENSE file for more info.
+
+## Sample Video file
+
+http://commons.nicovideo.jp/material/nc36303

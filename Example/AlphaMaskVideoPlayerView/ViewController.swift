@@ -7,18 +7,27 @@
 //
 
 import UIKit
+import AlphaMaskVideoPlayerView
 
-class ViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
+final class ViewController: UIViewController, AlphaMaskVideoPlayerDelegate {
+  let player = AlphaMaskVideoPlayer(mainVideoUrl: Bundle.main.url(forResource: "main", withExtension: "mp4")!,
+                                    alphaVideoUrl: Bundle.main.url(forResource: "main_alpha", withExtension: "mp4")!)
+  @IBOutlet private weak var playerView: AlphaMaskVideoPlayerView!
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    playerView.setPlayer(player)
+    playerView.contentMode = .scaleAspectFill
+    player.delegate = self
+    try! player.play()
+  }
+  
+  func playerDidFinishPlaying(_ player: AlphaMaskVideoPlayer) {
+    player.cancel()
+  }
+  
+  override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    try! player.play()
+  }
 }
 
