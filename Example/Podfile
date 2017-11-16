@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'AlphaMaskVideoPlayerView_Example' do
+  pod 'AlphaMaskVideoPlayerView', :path => '../'
+
+  target 'AlphaMaskVideoPlayerView_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
