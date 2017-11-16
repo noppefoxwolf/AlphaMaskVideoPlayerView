@@ -8,6 +8,8 @@
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
+![](https://github.com/noppefoxwolf/AlphaMaskVideoPlayerView/blob/master/Resource/sample.gif)
+
 ## Requirements
 
 ## Installation
