@@ -39,7 +39,11 @@ final class ViewController: UIViewController, AlphaMaskVideoPlayerDelegate {
   }
   
   override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-    try! player.play()
+    do {
+      try player.play()
+    } catch {
+      print("not able to play.")
+    }
   }
 }
 

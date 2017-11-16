@@ -42,8 +42,16 @@ open class AlphaMaskVideoPlayer {
     alphaAssetReader = try AVAssetReader(asset: alphaAsset)
     mainOutput = AVAssetReaderTrackOutput(track: mainAsset.tracks(withMediaType: AVMediaType.video)[0], outputSettings: outputSettings as [String : Any])
     alphaOutput = AVAssetReaderTrackOutput(track: alphaAsset.tracks(withMediaType: AVMediaType.video)[0], outputSettings: outputSettings as [String : Any])
-    mainAssetReader.add(self.mainOutput)
-    alphaAssetReader.add(self.alphaOutput)
+    if mainAssetReader.canAdd(mainOutput) {
+      mainAssetReader.add(mainOutput)
+    } else {
+      throw AlphaMaskVideoPlayerError()
+    }
+    if alphaAssetReader.canAdd(alphaOutput) {
+      alphaAssetReader.add(alphaOutput)
+    } else {
+      throw AlphaMaskVideoPlayerError()
+    }
     mainOutput.alwaysCopiesSampleData = false
     alphaOutput.alwaysCopiesSampleData = false
   }
@@ -63,7 +71,7 @@ open class AlphaMaskVideoPlayer {
     startReading()
     queue.async { [weak self] in
       guard let _self = self else { return }
-      while _self.mainAssetReader.status != .completed {
+      while _self.mainAssetReader.status == .reading {
         autoreleasepool(invoking: { [weak self] in
           guard let (main, alpha) = self?.push() else { return }
           guard let mainCI = self?.image(from: main) else { return }
@@ -101,12 +109,12 @@ open class AlphaMaskVideoPlayer {
     previousActualFrameTime = CFAbsoluteTimeGetCurrent()
   }
   
-  private func push() -> (CMSampleBuffer?, CMSampleBuffer?) {
-    guard mainAssetReader.error == nil else { return (nil, nil) }
-    guard mainAssetReader.status == .reading else { return (nil, nil) }
+  private func push() -> (CMSampleBuffer?, CMSampleBuffer?)? {
+    guard mainAssetReader.error == nil else { return nil }
+    guard mainAssetReader.status == .reading else { return nil }
     let main = mainOutput.copyNextSampleBuffer()
-    guard alphaAssetReader.error == nil else { return (nil, nil) }
-    guard alphaAssetReader.status == .reading else { return (nil, nil) }
+    guard alphaAssetReader.error == nil else { return nil }
+    guard alphaAssetReader.status == .reading else { return nil }
     let alpha = alphaOutput.copyNextSampleBuffer()
     return (main, alpha)
   }
