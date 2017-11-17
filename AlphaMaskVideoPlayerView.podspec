@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'AlphaMaskVideoPlayerView'
-  s.version          = '0.1.0'
+  s.version          = '0.2.0'
   s.summary          = 'A short description of AlphaMaskVideoPlayerView.'
   s.description      = <<-DESC
 TODO: Add long description of the pod here.
