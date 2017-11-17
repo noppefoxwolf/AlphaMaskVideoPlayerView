@@ -14,6 +14,7 @@ internal protocol AlphaMaskVideoPlayerUpdateDelegate: class {
 
 public protocol AlphaMaskVideoPlayerDelegate: class {
   func playerDidFinishPlaying(_ player: AlphaMaskVideoPlayer)
+  func playerDidCancelPlaying(_ player: AlphaMaskVideoPlayer)
 }
 
 open class AlphaMaskVideoPlayer {
@@ -31,10 +32,21 @@ open class AlphaMaskVideoPlayer {
   private var previousFrameTime = kCMTimeZero
   private var previousActualFrameTime = CFAbsoluteTimeGetCurrent()
   var playAtActualSpeed: Bool = true
+  private lazy var displayLink: CADisplayLink = .init(target: self, selector: #selector(AlphaMaskVideoPlayer.update))
   
-  public init(mainVideoUrl: URL, alphaVideoUrl: URL) {
+  public init(mainVideoUrl: URL, alphaVideoUrl: URL, preferredFramesPerSecond: Int = 30) {
     mainAsset = AVURLAsset(url: mainVideoUrl)
     alphaAsset = AVURLAsset(url: alphaVideoUrl)
+    displayLink.add(to: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+    if #available(iOS 10.0, *) {
+      displayLink.preferredFramesPerSecond = 30
+    } else {
+      displayLink.frameInterval = Int(Float(preferredFramesPerSecond) / 30.0)
+    }
+  }
+  
+  deinit {
+    displayLink.invalidate()
   }
   
   private func reset() throws {
@@ -54,9 +66,6 @@ open class AlphaMaskVideoPlayer {
     }
     mainOutput.alwaysCopiesSampleData = false
     alphaOutput.alwaysCopiesSampleData = false
-  }
-  
-  private func startReading() {
     mainAssetReader.startReading()
     alphaAssetReader.startReading()
   }
@@ -68,45 +77,52 @@ open class AlphaMaskVideoPlayer {
   
   public func play() throws {
     try reset()
-    startReading()
-    queue.async { [weak self] in
-      guard let _self = self else { return }
-      while _self.mainAssetReader.status == .reading {
-        autoreleasepool(invoking: { [weak self] in
-          guard let (main, alpha) = self?.push() else { return }
-          guard let mainCI = self?.image(from: main) else { return }
-          guard let alphaCI = self?.image(from: alpha) else { return }
-          self?.maskFilter?.setValue(mainCI, forKey: kCIInputImageKey)
-          self?.maskFilter?.setValue(alphaCI, forKey: "inputMaskImage")
-          self?.updateDelegate?.didOutputFrame(self?.maskFilter?.outputImage)
-          self?.sleepIfNeeded(with: main)
-        })
-      }
-      _self.delegate?.playerDidFinishPlaying(_self)
-    }
+    displayLink.isPaused = false
+  }
+  
+  public func pause() {
+    displayLink.isPaused = true
+  }
+  
+  public func resume() {
+    displayLink.isPaused = false
   }
   
   public func cancel() {
+    let running = mainAssetReader.status != .completed && mainAssetReader.status != .cancelled
     cancelReading()
     updateDelegate?.didOutputFrame(nil)
+    displayLink.isPaused = true
+    if running {
+      delegate?.playerDidCancelPlaying(self)
+    }
   }
   
-  private func sleepIfNeeded(with sampleBuffer: CMSampleBuffer?) {
-    guard playAtActualSpeed else { return }
-    guard let sampleBuffer = sampleBuffer else { return }
-    let currentSampleTime = CMSampleBufferGetOutputPresentationTimeStamp(sampleBuffer)
-    let differenceFromLastFrame = CMTimeSubtract(currentSampleTime, previousFrameTime)
-    let currentActualTime = CFAbsoluteTimeGetCurrent()
-    
-    let frameTimeDifference = CMTimeGetSeconds(differenceFromLastFrame)
-    let actualTimeDifference = currentActualTime - previousActualFrameTime
-    
-    if (frameTimeDifference > actualTimeDifference) {
-      usleep(UInt32(round(1000000.0 * (frameTimeDifference - actualTimeDifference))))
+  private func finish() {
+    updateDelegate?.didOutputFrame(nil)
+    displayLink.isPaused = true
+    delegate?.playerDidFinishPlaying(self)
+  }
+  
+  @objc private func update(_ link: CADisplayLink) {
+    queue.async { [weak self] in
+      autoreleasepool(invoking: { [weak self] in
+        self?.updateFrame()
+      })
     }
-    
-    previousFrameTime = currentSampleTime
-    previousActualFrameTime = CFAbsoluteTimeGetCurrent()
+  }
+  
+  private func updateFrame() {
+    switch mainAssetReader.status {
+    case .completed: finish(); return
+    default: break
+    }
+    guard let (main, alpha) = push() else { return }
+    guard let mainCI = image(from: main) else { return }
+    guard let alphaCI = image(from: alpha) else { return }
+    maskFilter?.setValue(mainCI, forKey: kCIInputImageKey)
+    maskFilter?.setValue(alphaCI, forKey: "inputMaskImage")
+    updateDelegate?.didOutputFrame(maskFilter?.outputImage)
   }
   
   private func push() -> (CMSampleBuffer?, CMSampleBuffer?)? {

@@ -35,11 +35,16 @@ final class ViewController: UIViewController, AlphaMaskVideoPlayerDelegate {
   }
   
   func playerDidFinishPlaying(_ player: AlphaMaskVideoPlayer) {
-    player.cancel()
+    print("finish")
+  }
+  
+  func playerDidCancelPlaying(_ player: AlphaMaskVideoPlayer) {
+    print("cancel")
   }
   
   override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
     do {
+      player.cancel()
       try player.play()
     } catch {
       print("not able to play.")
