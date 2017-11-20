@@ -17,7 +17,7 @@ public protocol AlphaMaskVideoPlayerDelegate: class {
   func playerDidCancelPlaying(_ player: AlphaMaskVideoPlayer)
 }
 
-open class AlphaMaskVideoPlayer {
+open class AlphaMaskVideoPlayer: NSObject {
   private let outputSettings = [kCVPixelBufferPixelFormatTypeKey : kCVPixelFormatType_32BGRA]
   private let mainAsset: AVURLAsset
   private let alphaAsset: AVURLAsset
@@ -37,9 +37,10 @@ open class AlphaMaskVideoPlayer {
   public init(mainVideoUrl: URL, alphaVideoUrl: URL, preferredFramesPerSecond: Int = 30) {
     mainAsset = AVURLAsset(url: mainVideoUrl)
     alphaAsset = AVURLAsset(url: alphaVideoUrl)
+    super.init()
     displayLink.add(to: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
     if #available(iOS 10.0, *) {
-      displayLink.preferredFramesPerSecond = 30
+      displayLink.preferredFramesPerSecond = preferredFramesPerSecond
     } else {
       displayLink.frameInterval = Int(Float(preferredFramesPerSecond) / 30.0)
     }
