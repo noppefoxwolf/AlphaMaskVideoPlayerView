@@ -33,17 +33,15 @@ open class AlphaMaskVideoPlayer: NSObject {
   private var previousActualFrameTime = CFAbsoluteTimeGetCurrent()
   var playAtActualSpeed: Bool = true
   private lazy var displayLink: CADisplayLink = .init(target: self, selector: #selector(AlphaMaskVideoPlayer.update))
+  private var beforeTimeStamp: CFTimeInterval? = nil
+  private let timeInterval: CFTimeInterval
   
-  public init(mainVideoUrl: URL, alphaVideoUrl: URL, preferredFramesPerSecond: Int = 30) {
+  public init(mainVideoUrl: URL, alphaVideoUrl: URL, fps: Int) {
     mainAsset = AVURLAsset(url: mainVideoUrl)
     alphaAsset = AVURLAsset(url: alphaVideoUrl)
+    timeInterval = 1.0 / CFTimeInterval(fps)
     super.init()
     displayLink.add(to: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
-    if #available(iOS 10.0, *) {
-      displayLink.preferredFramesPerSecond = preferredFramesPerSecond
-    } else {
-      displayLink.frameInterval = Int(Float(preferredFramesPerSecond) / 30.0)
-    }
   }
   
   deinit {
@@ -100,12 +98,17 @@ open class AlphaMaskVideoPlayer: NSObject {
   }
   
   private func finish() {
+    beforeTimeStamp = nil
     updateDelegate?.didOutputFrame(nil)
     displayLink.isPaused = true
     delegate?.playerDidFinishPlaying(self)
   }
   
   @objc private func update(_ link: CADisplayLink) {
+    if let beforeTimeStamp = beforeTimeStamp {
+      guard timeInterval <= link.timestamp - beforeTimeStamp else { return }
+    }
+    beforeTimeStamp = link.timestamp
     queue.async { [weak self] in
       autoreleasepool(invoking: { [weak self] in
         self?.updateFrame()
