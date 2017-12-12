@@ -28,13 +28,12 @@ open class AlphaMaskVideoPlayer: NSObject {
   private var mainOutput: AVAssetReaderTrackOutput!
   private var alphaOutput: AVAssetReaderTrackOutput!
   private let maskFilter = CIFilter(name: "CIBlendWithMask")
-  private let queue = DispatchQueue(label: "com.noppe.video")
+  private static let queue = DispatchQueue(label: "com.noppe.AlphaMaskVideoPlayer.video")
   public weak var delegate: AlphaMaskVideoPlayerDelegate? = nil
   internal weak var updateDelegate: AlphaMaskVideoPlayerUpdateDelegate? = nil
   private var previousFrameTime = kCMTimeZero
   private var previousActualFrameTime = CFAbsoluteTimeGetCurrent()
-  var playAtActualSpeed: Bool = true
-  private lazy var displayLink: CADisplayLink = .init(target: self, selector: #selector(AlphaMaskVideoPlayer.update))
+  private lazy var displayLink: CADisplayLink = .init(target: WeakProxy(target: self), selector: #selector(AlphaMaskVideoPlayer.update))
   private var beforeTimeStamp: CFTimeInterval? = nil
   private let timeInterval: CFTimeInterval
   
@@ -43,7 +42,8 @@ open class AlphaMaskVideoPlayer: NSObject {
     alphaAsset = AVURLAsset(url: alphaVideoUrl)
     timeInterval = 1.0 / CFTimeInterval(fps)
     super.init()
-    displayLink.add(to: RunLoop.main, forMode: RunLoopMode.commonModes)
+    displayLink.add(to: .main, forMode: .commonModes)
+    displayLink.isPaused = true
   }
   
   deinit {
@@ -113,7 +113,7 @@ open class AlphaMaskVideoPlayer: NSObject {
       }
     }
     beforeTimeStamp = link.timestamp
-    queue.async { [weak self] in
+    AlphaMaskVideoPlayer.queue.async { [weak self] in
       autoreleasepool(invoking: { [weak self] in
         self?.updateFrame()
       })
@@ -121,6 +121,7 @@ open class AlphaMaskVideoPlayer: NSObject {
   }
   
   private func updateFrame() {
+    guard !displayLink.isPaused else { return }
     switch mainAssetReader.status {
     case .completed: finish(); return
     default: break
@@ -158,3 +159,5 @@ open class AlphaMaskVideoPlayer: NSObject {
     return ci
   }
 }
+
+

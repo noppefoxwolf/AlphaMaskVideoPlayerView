@@ -13,6 +13,7 @@ open class AlphaMaskVideoPlayerView: GLKView, AlphaMaskVideoPlayerUpdateDelegate
   private var image: CIImage? = nil
   private var threadSafeBounds: CGRect = CGRect.zero
   private var threadSafeContentMode: UIViewContentMode = UIViewContentMode.scaleToFill
+  private var player: AlphaMaskVideoPlayer? = nil
   
   open override var bounds: CGRect {
     didSet { threadSafeBounds = bounds }
@@ -41,6 +42,7 @@ open class AlphaMaskVideoPlayerView: GLKView, AlphaMaskVideoPlayerUpdateDelegate
     enableSetNeedsDisplay = false
     backgroundColor = .clear
     _ = destRect
+    contentScaleFactor = 1.0
   }
   
   open override func draw(_ rect: CGRect) {
@@ -53,7 +55,8 @@ open class AlphaMaskVideoPlayerView: GLKView, AlphaMaskVideoPlayerUpdateDelegate
   }
   
   public func setPlayer(_ player: AlphaMaskVideoPlayer) {
-    player.updateDelegate = self
+    self.player = player
+    self.player?.updateDelegate = self
   }
   
   public func didOutputFrame(_ image: CIImage?) {
@@ -67,8 +70,7 @@ open class AlphaMaskVideoPlayerView: GLKView, AlphaMaskVideoPlayerUpdateDelegate
   }
   open override func layoutSubviews() {
     super.layoutSubviews()
-    let scale = UIScreen.main.scale
-    threadSafeBounds = bounds.applying(CGAffineTransform(scaleX: scale, y: scale))
+    threadSafeBounds = bounds
     threadSafeContentMode = contentMode
   }
   
