@@ -10,9 +10,11 @@ import AVFoundation
 
 internal protocol AlphaMaskVideoPlayerUpdateDelegate: class {
   func didOutputFrame(_ image: CIImage?)
+  func didReceiveError(_ error: Error?)
 }
 
 public protocol AlphaMaskVideoPlayerDelegate: class {
+  
   func playerDidFinishPlaying(_ player: AlphaMaskVideoPlayer)
   func playerDidCancelPlaying(_ player: AlphaMaskVideoPlayer)
 }
@@ -106,7 +108,9 @@ open class AlphaMaskVideoPlayer: NSObject {
   
   @objc private func update(_ link: CADisplayLink) {
     if let beforeTimeStamp = beforeTimeStamp {
-      guard timeInterval <= link.timestamp - beforeTimeStamp else { return }
+      guard timeInterval <= link.timestamp - beforeTimeStamp else {
+        return
+      }
     }
     beforeTimeStamp = link.timestamp
     queue.async { [weak self] in
@@ -130,10 +134,18 @@ open class AlphaMaskVideoPlayer: NSObject {
   }
   
   private func push() -> (CMSampleBuffer?, CMSampleBuffer?)? {
-    guard mainAssetReader.error == nil else { return nil }
+    if let error = mainAssetReader.error {
+      updateDelegate?.didReceiveError(error)
+      finish()
+      return nil
+    }
     guard mainAssetReader.status == .reading else { return nil }
     let main = mainOutput.copyNextSampleBuffer()
-    guard alphaAssetReader.error == nil else { return nil }
+    if let error = alphaAssetReader.error {
+      updateDelegate?.didReceiveError(error)
+      finish()
+      return nil
+    }
     guard alphaAssetReader.status == .reading else { return nil }
     let alpha = alphaOutput.copyNextSampleBuffer()
     return (main, alpha)
