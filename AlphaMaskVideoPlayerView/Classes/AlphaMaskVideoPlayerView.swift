@@ -61,6 +61,10 @@ open class AlphaMaskVideoPlayerView: GLKView, AlphaMaskVideoPlayerUpdateDelegate
     display()
   }
   
+  func didReceiveError(_ error: Error?) {
+    self.image = nil
+    display()
+  }
   open override func layoutSubviews() {
     super.layoutSubviews()
     let scale = UIScreen.main.scale
