@@ -41,7 +41,7 @@ open class AlphaMaskVideoPlayer: NSObject {
     alphaAsset = AVURLAsset(url: alphaVideoUrl)
     timeInterval = 1.0 / CFTimeInterval(fps)
     super.init()
-    displayLink.add(to: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+    displayLink.add(to: RunLoop.main, forMode: RunLoopMode.commonModes)
   }
   
   deinit {
