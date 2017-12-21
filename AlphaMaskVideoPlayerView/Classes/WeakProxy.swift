@@ -5,7 +5,7 @@
 //  Created by Tomoya Hirano on 2017/12/12.
 //
 
-import UIKit
+import Foundation
 
 final internal class WeakProxy: NSObject {
   weak var target: NSObjectProtocol?

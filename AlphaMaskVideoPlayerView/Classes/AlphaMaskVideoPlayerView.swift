@@ -5,7 +5,6 @@
 //  Created by Tomoya Hirano on 2017/11/16.
 //
 
-import UIKit
 import GLKit
 
 open class AlphaMaskVideoPlayerView: GLKView, AlphaMaskVideoPlayerUpdateDelegate {

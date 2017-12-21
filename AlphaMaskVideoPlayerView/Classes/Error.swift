@@ -5,6 +5,6 @@
 //  Created by Tomoya Hirano on 2017/11/16.
 //
 
-import UIKit
+import Foundation
 
 public struct AlphaMaskVideoPlayerError: Error {}
