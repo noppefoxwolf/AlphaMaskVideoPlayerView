@@ -11,8 +11,9 @@ import AlphaMaskVideoPlayerView
 import AVFoundation
 
 final class ViewController: UIViewController, AlphaMaskVideoPlayerDelegate {
-  let player = AlphaMaskVideoPlayer(mainVideoUrl: Bundle.main.url(forResource: "main", withExtension: "mp4")!,
-                                    alphaVideoUrl: Bundle.main.url(forResource: "main_alpha", withExtension: "mp4")!)
+  let player = AlphaMaskVideoPlayer(mainVideoUrl: Bundle.main.url(forResource: "gift", withExtension: "mp4")!,
+                                    alphaVideoUrl: Bundle.main.url(forResource: "alpha", withExtension: "mp4")!,
+                                    fps: 30)
   @IBOutlet private weak var playerView: AlphaMaskVideoPlayerView!
   
   private let camera = AVCaptureDevice.default(for: AVMediaType.video)
@@ -30,6 +31,7 @@ final class ViewController: UIViewController, AlphaMaskVideoPlayerDelegate {
     
     playerView.setPlayer(player)
     playerView.contentMode = .scaleAspectFill
+    playerView.contentScaleFactor = UIScreen.main.scale
     player.delegate = self
     try! player.play()
   }

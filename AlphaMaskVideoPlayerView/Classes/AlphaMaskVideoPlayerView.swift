@@ -47,7 +47,9 @@ open class AlphaMaskVideoPlayerView: GLKView, AlphaMaskVideoPlayerUpdateDelegate
   open override func draw(_ rect: CGRect) {
     glClearColor(0, 0, 0, 0)
     if let image = image {
-      ciContext.draw(image, in: destRect(from: image.extent), from: image.extent)
+      ciContext.draw(image,
+                     in: destRect(from: image.extent).applying(CGAffineTransform(scaleX: contentScaleFactor, y: contentScaleFactor)),
+                     from: image.extent)
     } else {
       glClear(GLbitfield(GL_COLOR_BUFFER_BIT))
     }
@@ -60,7 +62,9 @@ open class AlphaMaskVideoPlayerView: GLKView, AlphaMaskVideoPlayerUpdateDelegate
   
   public func didOutputFrame(_ image: CIImage?) {
     self.image = image
-    display()
+    DispatchQueue.main.async { [weak self] in
+      self?.display()
+    }
   }
   
   func didReceiveError(_ error: Error?) {
