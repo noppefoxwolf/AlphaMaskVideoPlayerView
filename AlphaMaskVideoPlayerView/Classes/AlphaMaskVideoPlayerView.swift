@@ -69,7 +69,11 @@ open class AlphaMaskVideoPlayerView: GLKView, AlphaMaskVideoPlayerUpdateDelegate
   
   func didReceiveError(_ error: Error?) {
     self.image = nil
-    display()
+    print("[AlphaMaskVideoPlayerView didReceiveError] ", error ?? "unknown error")
+    DispatchQueue.main.async { [weak self] in
+      self?.display()
+    }
+    
   }
   open override func layoutSubviews() {
     super.layoutSubviews()
