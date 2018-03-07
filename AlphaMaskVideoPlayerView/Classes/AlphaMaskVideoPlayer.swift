@@ -27,7 +27,6 @@ open class AlphaMaskVideoPlayer: NSObject {
   private var mainOutput: AVAssetReaderTrackOutput!
   private var alphaOutput: AVAssetReaderTrackOutput!
   private let maskFilter = CIFilter(name: "CIBlendWithMask")
-  private static let queue = DispatchQueue(label: "com.noppe.AlphaMaskVideoPlayer.video")
   public weak var delegate: AlphaMaskVideoPlayerDelegate? = nil
   internal weak var updateDelegate: AlphaMaskVideoPlayerUpdateDelegate? = nil
   private var previousFrameTime = kCMTimeZero
@@ -112,7 +111,7 @@ open class AlphaMaskVideoPlayer: NSObject {
       }
     }
     beforeTimeStamp = link.timestamp
-    AlphaMaskVideoPlayer.queue.async { [weak self] in
+    DispatchQueue.global(qos: .userInteractive).sync { [weak self] in
       autoreleasepool(invoking: { [weak self] in
         self?.updateFrame()
       })

@@ -61,8 +61,9 @@ open class AlphaMaskVideoPlayerView: GLKView, AlphaMaskVideoPlayerUpdateDelegate
   }
   
   public func didOutputFrame(_ image: CIImage?) {
+    EAGLContext.setCurrent(context)
     self.image = image
-    DispatchQueue.main.async { [weak self] in
+    DispatchQueue.global(qos: .userInteractive).sync { [weak self] in
       self?.display()
     }
   }
@@ -70,7 +71,7 @@ open class AlphaMaskVideoPlayerView: GLKView, AlphaMaskVideoPlayerUpdateDelegate
   func didReceiveError(_ error: Error?) {
     self.image = nil
     print("[AlphaMaskVideoPlayerView didReceiveError] ", error ?? "unknown error")
-    DispatchQueue.main.async { [weak self] in
+    DispatchQueue.global(qos: .userInteractive).sync { [weak self] in
       self?.display()
     }
     
