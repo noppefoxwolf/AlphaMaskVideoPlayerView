@@ -45,6 +45,7 @@ open class AlphaMaskVideoPlayerView: GLKView, AlphaMaskVideoPlayerUpdateDelegate
   }
   
   open override func draw(_ rect: CGRect) {
+    guard UIApplication.shared.applicationState != .background else { return }
     glClearColor(0, 0, 0, 0)
     if let image = image {
       ciContext.draw(image,
