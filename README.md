@@ -1,3 +1,13 @@
+=============================================================
+
+I developed more high performance library.
+
+If you publish for low spec devices, please use Kitsunebi.
+
+https://github.com/noppefoxwolf/Kitsunebi
+
+=============================================================
+
 # AlphaMaskVideoPlayerView
 
 [![Version](https://img.shields.io/cocoapods/v/AlphaMaskVideoPlayerView.svg?style=flat)](http://cocoapods.org/pods/AlphaMaskVideoPlayerView)
