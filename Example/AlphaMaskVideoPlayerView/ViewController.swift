@@ -12,7 +12,7 @@ import AVFoundation
 
 final class ViewController: UIViewController, AlphaMaskVideoPlayerDelegate {
   let player = AlphaMaskVideoPlayer(mainVideoUrl: Bundle.main.url(forResource: "main", withExtension: "mp4")!,
-                                    alphaVideoUrl: Bundle.main.url(forResource: "main_alpha", withExtension: "mp4")!,
+                                    alphaVideoUrl: Bundle.main.url(forResource: "alpha", withExtension: "mp4")!,
                                     fps: 30)
   @IBOutlet private weak var playerView: AlphaMaskVideoPlayerView!
   

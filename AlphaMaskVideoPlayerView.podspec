@@ -11,6 +11,6 @@ TODO: Add long description of the pod here.
   s.author           = { '🦊Tomoya Hirano' => 'noppelabs@gmail.com' }
   s.source           = { :git => 'https://github.com/noppefoxwolf/AlphaMaskVideoPlayerView.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/noppefoxwolf'
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '10.0'
   s.source_files = 'AlphaMaskVideoPlayerView/Classes/**/*'
 end

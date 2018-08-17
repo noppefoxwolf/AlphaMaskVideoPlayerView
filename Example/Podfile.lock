@@ -1,16 +1,16 @@
 PODS:
-  - AlphaMaskVideoPlayerView (0.6.0)
+  - AlphaMaskVideoPlayerView (0.11.0)
 
 DEPENDENCIES:
   - AlphaMaskVideoPlayerView (from `../`)
 
 EXTERNAL SOURCES:
   AlphaMaskVideoPlayerView:
-    :path: ../
+    :path: "../"
 
 SPEC CHECKSUMS:
-  AlphaMaskVideoPlayerView: 6d5c59cf682a0fca09359c290be0a30cb194bb8e
+  AlphaMaskVideoPlayerView: 7089c01fb88e05cc1c3857acda3843d2ae5534e2
 
 PODFILE CHECKSUM: 12be5b464d2f56bf9d80e69e1ba0bec3dfef4b54
 
-COCOAPODS: 1.4.0.beta.2
+COCOAPODS: 1.5.3
